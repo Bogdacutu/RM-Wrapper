@@ -28,6 +28,8 @@ int str_between(const char* str, const char* prefix, const char* suffix, char* o
     } else return -1;
 }
 
+unsigned char* POWER_MAGIC = "POWER";
+
 FILE* fopen(const char* path, const char* mode) {
     static FILE* (*_fopen)(const char*, const char*) = NULL;
     if (!_fopen)
