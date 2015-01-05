@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define ENABLE_ANDROID_LOGGING 0
+#define MINIMUM_LOGGING_LEVEL ANDROID_LOG_INFO
+
 #define min(a,b) \
     ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
