@@ -89,25 +89,37 @@ size_t fread(void* ptr, size_t size, size_t count, FILE* stream) {
     return _fread(ptr, size, count, stream);
 }
 
-void (*ts_main_resume)();
-void (*ts_main_calc)();
+int (*ts_main_init)();
+int (*ts_main_resume)();
+int (*ts_main_calc)();
 
 int main() {
     void* dl = dlopen("ts.default.so", RTLD_NOW | RTLD_GLOBAL);
-    if (!dl)
-        return printf("%s\n", dlerror());
+    if (!dl) {
+        printf("Failed to load library: %s\n", dlerror());
+        return 1;
+    }
     
+    ts_main_init = dlsym(dl, "ts_main_init");
+    if (!ts_main_init) {
+        printf("Failed to find ts_main_init: %s\n", dlerror());
+        return 1;
+    }
     ts_main_resume = dlsym(dl, "ts_main_resume");
-    if (!ts_main_resume)
-        return printf("%s\n", dlerror());
+    if (!ts_main_resume) {
+        printf("Failed to find ts_main_resume: %s\n", dlerror());
+        return 1;
+    }
     ts_main_calc = dlsym(dl, "ts_main_calc");
-    if (!ts_main_calc)
-        return printf("%s\n", dlerror());
+    if (!ts_main_calc) {
+        printf("Failed to find ts_main_calc: %s\n", dlerror());
+        return 1;
+    }
     
+    ts_main_init();
     ts_main_resume();
-    
     while (1) {
         ts_main_calc();
-        usleep(5000);
+        sleep(5);
     }
 }
